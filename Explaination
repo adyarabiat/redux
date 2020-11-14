@@ -1,0 +1,54 @@
+The whole idea here that we want to have access to the state and manage it from one place instead of creating and manage the state from many files and then pass many props between those files 
+
+
+1. first we have to create the store 
+
+import { createStore } from "redux";
+then we create store = createStore()
+
+2. then we have to pass to it the reducer which contain the state
+so we have to create anothor folder and create the reducer and this reducer takes two arrgumen first one the state and second one the action then at the end we have to return state
+
+3. then we have to connect redux with react by 
+import { Provider } from "react-redux";
+then we wrrape the whole app with it and we pass to it store={store} by this we give access to the store from all the areas in our app 
+
+4. How we get this state from the coponent well :
+we have to that component and import :
+import { connect } from "react-redux";
+then we wrrape the export defult with it by 
+export default connect()(Counter);
+
+5.then we have to use the state but how well:
+we map the state to props then we use those props in the app 
+
+const mapStateToProps = (state) => {
+  return {
+    ctr: state.counter,
+  };
+};
+
+so now we have prop called ctr and it has the state that we created in the reducer
+but here we have to give to the connect 
+export default connect(mapStateToProps)(Counter);
+
+6. now we can use this prop in the app instead of the state 
+ value={this.props.ctr} 
+
+7. Now how we update the state ???
+well to update the state we use actions and we dispatch them 
+
+we do this by creating mapDispatchtoProps to tell how we want to update the state :
+
+const mapDispatchtoProps = (dispatch) => {
+  return {
+    onIncrementCounter: () => dispatch({ type: "INCREMENT" }),
+  };
+};
+
+then in the reducer we give it the action to update the state:
+ if (action.type === "INCREMENT") {
+    return {
+      counter: state.counter + 1,
+    };
+  }
