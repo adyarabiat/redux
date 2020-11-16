@@ -52,3 +52,88 @@ then in the reducer we give it the action to update the state:
       counter: state.counter + 1,
     };
   }
+
+****************************************************************
+Passing and Retrieving Data with Action:
+
+So in our app we are adding and SUBTRACT numbers but we hard coded it in the reducer BUT in the real apps we are not doing it like this but instead we are going to pass the data or the numbers from our component 
+
+To do so we have to add another property to the dispatch so first we add type and we have to becouse type is not optional in redux but the second one is 
+
+So we can add to it another property and we can call it what ever we want like value or val or payload which recives any kind of data like object ,numbers...
+****************************************************************
+Updating the state Immutably 
+
+So always when I want to update the state in the reducer becouse the reducer is the place where we changing and doing stuff to the state I have always to updated immutably and not to change the state by it self and I have two ways to do that :
+first when we assin the new state or we want to change any of it is properties instead of doing this :
+ return {
+        counter: state.counter - 1,
+      };
+becouse here we are changing the original object in the state we have to make copy of it and then change it so we can do this 
+
+we can say newState = Object.assign({} , state)
+then we can use the newState 
+so here we are making a copy of it or in a more simple way we can do this :
+return {
+        ...state,
+        counter: state.counter - 1,
+      };
+So here im just using the spread operator to change on object so we take copy of the state then we overwrite what we want inside it 
+
+we use here as well 
+results: this.state.results.concat(state.counter),
+
+concat here is like push but it does not change the original but it just add to it the counter 
+
+Note: if we are trying to use push we have to assign the array which is result to a variable first becouse i can not use it like concat i mean here that concat can work like [5,6].concat but wiht push you have to say let x =[5,6] then x.push()
+ 
+****************************************************************
+Updating array Immutably
+
+So usualy before we used to delete element from the list by using splice(the index , 1) so we select the index then we delete 1 so that how we used to do but that is not right becouse we are changing the original array.
+
+So if i want to delete element from the results array we have two options to do that:
+
+1. create a copy of the results array
+newArr = [...state.results];
+then we can use newArr.splice(id,1)
+
+above we have to be carfull when we doing this becouse when we are making a copy of the array [...state.results]; we have to remember that results will return object and the object assign not for a copy but it will refer to the original but becouse here we are deleting it no problem but if we changing is not acceptable 
+
+2.using the filter method 
+
+      // filter will return a copy of the array
+      // then we will say give me the array if the result.id in the array here not equal the action.resultElId which means the one we clicked on it becouse when we click on it , it will pass the id to the prop then that prop will store it in the resultElId
+
+****************************************************************
+
+Combining Multiple Reducers
+
+Now in our app we are using one reducer then we put it in the store in the index.js but sometimes when we have a bigger app we will make lots of reducers so how we do this becouse we have in the end to put all of them in one reducer and put it in the store 
+
+1.First we create the reducers in folder we call it usually reducer in the store folder 
+
+2.then we go to the index.js and we import from redux combineReducers this one will help to comined the reducers together 
+
+3. then we import the reducers to index js then we do the follwing
+
+const rootReducer = combineReducers({
+  counter: counterReducer,
+  result: resultReducer,
+});
+
+in the end we added to the store like this  
+const store = createStore(rootReducer);
+
+4. Now to access this state in the reducers by the Counter where we mapStateToProps we have to add it to it so we say :
+
+const mapStateToProps = (state) => {
+  return {
+    ctr: state.ctr.counter,
+    storeResults: state.res.results,
+  };
+};
+
+So here we have to say state.ctr.counter  So we need to call the key in the combined 
+
+***NOW if I want to pass the state of one of the reducers to another we can't use the global state but we can use it as action.payload or we call it what ever but here i mean the action.name 
