@@ -1,3 +1,5 @@
+Redux
+
 The whole idea here that we want to have access to the state and manage it from one place instead of creating and manage the state from many files and then pass many props between those files 
 
 
@@ -137,3 +139,44 @@ const mapStateToProps = (state) => {
 So here we have to say state.ctr.counter  So we need to call the key in the combined 
 
 ***NOW if I want to pass the state of one of the reducers to another we can't use the global state but we can use it as action.payload or we call it what ever but here i mean the action.name 
+
+
+
+****************************************************************
+****************************************************************
+
+Redux Advanced 
+
+So now we will dive more in Redux and understand it in depth 
+And the onley thing we did not do with it until now Asynchronous code in out app and how to handle it.
+
+Middleware :
+It is a term used for functions or code in general that we can used or hook it to a process then it will be excuted as a part of that process without stoping it 
+
+
+// How Middleware works
+// first we create function which recives store as arrgument
+
+const logger = (store) => {
+
+  // then it will return another function which recives next as arrgument and it is simple just arrgument will let the function to continue it is journy to the reducer
+
+  return (next) => {
+    // then this function will recives action as a arrgument, so this nested functions is called a middleware
+
+    return (action) => {
+
+      // now this function has access to the action , next and the store
+      console.log("[Middleware Dispatching]", action);
+
+      // now here next() will let the action reach the reducer so we have to pass action as arrgument
+
+      const result = next(action);
+      console.log("[Middleware next state]", store.getState());
+      return result;
+
+      // then after all this we have to use redux by applymiddleware to excute this then we have to pass it to the store in the createStore and then pass to it the logger
+      
+    };
+  };
+};
