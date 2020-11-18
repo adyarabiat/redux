@@ -180,3 +180,77 @@ const logger = (store) => {
     };
   };
 };
+
+
+****************************************************************
+
+Understanding Asynchronous code with Redux
+
+So usually the Redux Cycle is going like this:
+
+Action creator =preduce=> Action =Get fed to=> dispatch =forwards action to => Middleware =send action=> Reducers =create new=> State then this state wait until we update again
+
+Now if we are not using middlewares we will dispatch the action to the Reducers directlly without the middleware
+
+Now the main reson we use the Middlewares is to deal with async actions which is the actions that waiting for data from a servier or something and it needs some amount of time to get it 
+
+Explaination:
+
+So usualy as how we understood that when we use actions we dipatch them to the reducers but here the issue we have to wait until we get the data !! 
+
+So to do so we use middleware to make this possible !
+
+So in the index file we do the follwing:
+
+import thunk from "redux-thunk";
+
+AND
+
+import { createStore, combineReducers, applyMiddlewar } from "redux";
+
+We import applyMiddlewar from redux 
+
+Then here we add it like this :
+
+const store = createStore(
+  rootReducer, applyMiddleware( thunk)
+);
+
+Then in the actions file how we will make the request inside the action creator :
+
+So in the Counter file we import the action and we add it to the reducer So here we need to change on it before we dispatch it 
+
+So what we will do is will do the same action creator then inside it we will return (dispatch) this will return for us Asynchronous code then after we will return dispatch(Action) action here inside it means type and payload well payload is optional but usually becouse we dealling with Asynchronous code that means we are waiting for data so we have to use payload 
+
+So the action inside it should return object like :
+return {
+    type: STORE_RESULT,
+    resultPassed: result,
+  };
+
+
+Here we just give the action creator diffrent name and it return the object :
+
+export const saveResult = (result) => {
+  return {
+    type: STORE_RESULT,
+    resultPassed: result,
+  };
+};
+
+Here we do what we mentioned above:
+
+export const store_result = (result) => {
+  return (dispatch) => {
+    setTimeout(() => {
+      return dispatch(saveResult(result));
+    }, 2000);
+  };
+};
+So it is all about funtion that return another function that is all 
+
+And that is all now we are making the action creator wait before it dispatched to the reducer with data that get fetched from the servier 
+
+For more explaination check Steaphen Grider course exactly Async Actions with Redux Thunk module he explain everthing in details
+
+****************************************************************
